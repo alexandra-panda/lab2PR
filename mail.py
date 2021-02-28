@@ -1,18 +1,14 @@
-import smtplib
-from tkinter import *
-from tkinter import filedialog
-from email.mime.multipart import MIMEMultipart
-import datetime
 import email
 import imaplib
 from tkinter import *
-from tkinter import filedialog
+from MailOperations import MailOperations
 import smtplib
+import time
 import imaplib
 import email
-
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import traceback
+import sys
+sys.path.append("/path/to/script/file/directory/")
 
 
 def send_message():
@@ -26,17 +22,11 @@ def send_message():
 
     sender_password = "Damean.99"
 
-    server = smtplib.SMTP('smtp.gmail.com', 587)
+    # server = smtplib.SMTP('smtp.gmail.com', 587)
 
-    server.starttls()
-
-    server.login(sender_email, sender_password)
-
-    print("Login successful")
-
-    server.sendmail(sender_email, address_info, email_body_info)
-
-    print("Message sent")
+    MailOperations(sender_password, sender_email).send_email(subject_info,
+                                                             email_body_info,
+                                                             address_info)
 
     address_entry.delete(0, END)
     subject_entry.delete(0, END)
@@ -81,21 +71,7 @@ button.place(x=150, y=310)
 
 
 def openNewWindow():
-    # Toplevel object which will
-    # be treated as a new window
-    newWindow = Toplevel(app)
-
-    # sets the title of the
-    # Toplevel widget
-    newWindow.title("New Window")
-
-    # sets the geometry of toplevel
-    newWindow.geometry("800x500")
-
-    # A Label widget to show in toplevel
-    Label(newWindow,
-          text="Inbox").pack()
-
+    import readInbox
 
 btn = Button(app,
              text="Inbox",
@@ -103,32 +79,6 @@ btn = Button(app,
 btn.place(x=400, y=310)
 
 
-# def read_email_from_gmail():
-#     mail = imaplib.IMAP4_SSL('imap.gmail.com')
-#     mail.login('labexemplu@gmail.com', 'Damean.99')
-#     mail.select('inbox')
-#
-#     result, data = mail.search(None, 'ALL')
-#     mail_ids = data[0]
-#
-#     id_list = mail_ids.split()
-#     first_email_id = int(id_list[0])
-#     latest_email_id = int(id_list[-1])
-#
-#     for i in range(latest_email_id, first_email_id, -1):
-#         # need str(i)
-#         result, data = mail.fetch(str(i), '(RFC822)')
-#
-#         for response_part in data:
-#             if isinstance(response_part, tuple):
-#                 # from_bytes, not from_string
-#                 msg = email.message_from_bytes(response_part[1])
-#
-#                 email_from = msg['from']
-#                 print('From : ' + email_from + '\n')
-#
-#
-# # nothing to print here
-# read_email_from_gmail()
-
 mainloop()
+
+
